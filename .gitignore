@@ -1,0 +1,5 @@
+airflow/config
+airflow/logs
+airflow/.env
+notebook.ipynb
+venv
