@@ -1,5 +1,14 @@
+# Airflow
 airflow/config
 airflow/logs
 airflow/.env
+airflow/plugins
+
+# Jupyter
 notebook.ipynb
+
+# Python
 venv
+
+# data
+data
