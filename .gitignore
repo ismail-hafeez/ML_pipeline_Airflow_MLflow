@@ -9,6 +9,7 @@ notebook.ipynb
 
 # Python
 venv
+__pycache__
 
 # data
 data

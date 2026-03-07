@@ -31,3 +31,8 @@ print("Path to dataset files:", path)
         register_model     reject_model
 ```
 
+## Mount data to Airflow in docker-compose.yaml
+```yaml
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/data:/opt/airflow/data
+```
