@@ -10,15 +10,15 @@ print("Path to dataset files:", path)
 
 ## DAG Design
 ```text
-                ingest_data
+                data_ingestion
                       |
-               validate_data
+               data_validation
                       |
-            ---------------------
-            |                   |
-   handle_missing         feature_engineering
-            |                   |
-            ------- join -------
+            -------------------------
+            |                       |
+   handle_missing_values      feature_engineering
+            |                       |
+            ----- merge_data --------
                       |
                 encode_features
                       |
@@ -31,8 +31,47 @@ print("Path to dataset files:", path)
         register_model     reject_model
 ```
 
-## Mount data to Airflow in docker-compose.yaml
+## Docker Compose Configuration
+
+### MLflow Service
+```yaml
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.10.0
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow/mlflow.db --default-artifact-root mlflow-artifacts:/ --serve-artifacts --artifacts-destination /mlflow/artifacts
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    restart: always
+```
+
+### MLflow Tracking URI (Environment Variable)
+```yaml
+    MLFLOW_TRACKING_URI: http://mlflow:5000
+```
+
+### Mount Data Volume
 ```yaml
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/data:/opt/airflow/data
+```
+
+### Persistent Volumes
+```yaml
+volumes:
+  postgres-db-volume:
+  mlflow-data:
+```
+
+## How to Run
+```bash
+# Build and start all services (Airflow + MLflow)
+docker-compose build
+docker-compose up -d
+
+# Access Airflow UI
+http://localhost:8080
+
+# Access MLflow UI (runs inside Docker, no need to start separately)
+http://localhost:5000
 ```
