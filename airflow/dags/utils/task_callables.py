@@ -3,7 +3,7 @@ This module contains the task callables for the ML pipeline.
 """
 import pandas as pd 
 
-RAW_PATH = "/opt/airflow/data/raw/titanic.csv"
+RAW_PATH = "/opt/airflow/data/raw/Titanic-Dataset.csv"
 PROCESSED_PATH = "/opt/airflow/data/processed/"
 
 # Helper for Task 1
@@ -40,5 +40,20 @@ def validate_data(**context):
         raise Exception("Missing values in Age or Embarked columns exceed 30%")
 
 # Helper for Task 3
+def handle_missing_values(**context):
+    
+    path = context['ti'].xcom_pull(key="dataset_path", task_ids="data_ingestion")
+    df = pd.read_csv(path)
 
+    # Fill missing Age with median
+    median_age = df['Age'].median()
+    df['Age'].fillna(median_age, inplace=True)
+
+    # Fill missing Embarked with mode
+    mode_embarked = df['Embarked'].mode()[0]
+    df['Embarked'].fillna(mode_embarked, inplace=True)
+
+    # Save processed data
+    df.to_csv(f"{PROCESSED_PATH}/processed_data.csv", index=False)
+    context['ti'].xcom_push(key="processed_path", value=f"{PROCESSED_PATH}/processed_data.csv")
 
