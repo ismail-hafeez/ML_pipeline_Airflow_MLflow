@@ -1,3 +1,8 @@
+## Project Overview
+```text
+This project implements an end-to-end machine learning pipeline for predicting passenger survival on the Titanic dataset using Apache Airflow for workflow orchestration and MLflow for experiment tracking and model management. The pipeline automates the full ML lifecycle, including data ingestion, validation, preprocessing, feature engineering, encoding, model training, and evaluation. Based on the evaluation results, the workflow uses conditional branching to either register the trained model in the MLflow Model Registry if it meets the performance threshold or reject it if the accuracy is insufficient. Multiple runs with different hyperparameters are tracked in MLflow, allowing experiments to be compared and the best-performing model to be identified.
+```
+
 ## Download dataset
 ```bash
 import kagglehub
